@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/horizLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="90dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textViewAppName"
+            android:layout_width="280dp"
+            android:layout_height="51dp"
+            android:autoText="false"
+            android:contentDescription="@android:string/ok"
+            android:foregroundGravity="center"
+            android:gravity="center_horizontal"
+            android:text="ReNote"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewLogin"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:text="Логин" />
+
+        <EditText
+            android:id="@+id/editTextLogin"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:width="60dp"
+            android:ems="10"
+            android:hint="hjhjh"
+            android:inputType="textEmailAddress" />
+
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewPassword"
+                android:layout_width="145dp"
+                android:layout_height="wrap_content"
+                android:text="Пароль" />
+
+            <TextView
+                android:id="@+id/textViewPassword2"
+                android:layout_width="145dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autoLink="web"
+                android:autoText="false"
+                android:gravity="right"
+                android:text="Забыли пароль?"
+                android:textColor="@color/black_overlay"
+                android:textColorLink="@color/black_overlay" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/buttonLogIn"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="85dp"
+            android:text="Вход" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
