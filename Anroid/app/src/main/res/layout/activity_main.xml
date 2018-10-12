@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             android:width="60dp"
             android:ems="10"
-            android:hint="hjhjh"
             android:inputType="textEmailAddress" />
 
         <LinearLayout
