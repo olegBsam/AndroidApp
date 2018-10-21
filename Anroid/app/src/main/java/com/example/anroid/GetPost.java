@@ -2,47 +2,120 @@ package com.example.anroid;
 
 import android.os.AsyncTask;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.security.KeyPair;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
-public class GetPost {
+public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
 
-    private static final String myUrl = "http://localhost:55658/api/Rest";//"http://desktop-dtjiv0n:9810/api/Rest";
+    private static final String myUrl = "http://192.168.43.68:50000/api/Web";//"http://desktop-dtjiv0n:9810/api/Rest";
 
-    public static void doGet(String data) throws Exception {
-        URL url = new URL(myUrl);
+    public interface AsyncResponse {
+        void processFinish(String output) throws ExecutionException, InterruptedException;
+    }
 
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        connection.setRequestProperty("ContentType", "application/json");
+    public AsyncResponse delegate = null;
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+    public GetPost(AsyncResponse asyncResponse) {
+        this.delegate = asyncResponse;
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
         try {
-            bufferedWriter.write(data);
-            bufferedWriter.flush();
-        }
-        catch (Exception exc){
-            exc.printStackTrace();
-            throw exc;
-        }
-        finally {
-            bufferedWriter.close();
+            delegate.processFinish(result);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public static void sendData(String data) {
-        new AsyncTask<Void, String, String>(){
-            @Override
-            protected String doInBackground(Void... voids) {
+    private String getQuery(HashMap<String, String> map) throws UnsupportedEncodingException {
+        StringBuilder builder = new StringBuilder();
 
-                return "";
+        boolean isFirst = true;
+
+        for (Map.Entry<String, String> item : map.entrySet()){
+            if(isFirst){
+                isFirst = false;
+                builder.append('&');
             }
-        }.execute();
+
+            builder.append(URLEncoder.encode(item.getKey(), "UTF-8"));
+            builder.append('=');
+            builder.append(URLEncoder.encode(item.getValue(), "UTF-8"));
+        }
+
+        return builder.toString();
+    }
+
+    @Override
+    protected String doInBackground(HashMap<String, String>... maps) {
+        try {
+            URL url = new URL(myUrl);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            /*connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");*/
+            connection.setRequestProperty("ContentType", "application/json");
+
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+            try {
+                /*JSONObject object = new JSONObject();
+                object.put("value", "25");
+                bufferedWriter.write(URLEncoder.encode(object.toString(), "UTF-8"));*/
+                bufferedWriter.write(getQuery(maps[0]));
+                bufferedWriter.flush();
+
+                int responseCode = connection.getResponseCode();
+
+                String response = "";
+
+                if(responseCode == HttpURLConnection.HTTP_OK){
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String line;
+
+                    while((line = reader.readLine()) != null){
+                        response += line;
+                    }
+                }
+
+                return response;
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            } finally {
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception gfdgdfg) {
+            return null;
+        }
+
+        return null;
     }
 }
