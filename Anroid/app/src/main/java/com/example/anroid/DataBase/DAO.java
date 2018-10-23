@@ -5,23 +5,38 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.widget.TextView;
 
+import com.example.anroid.DataBase.entities.User;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class DAO extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "notesDB";
 
-    public DAO(Context context) {
+    private static DAO instance = null;
+
+    private DAO(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static DAO getDAO(Context context){
+        if(instance == null){
+            instance = new DAO(context);
+        }
+
+        return instance;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String tableUsers = "CREATE TABLE Users(Id INTEGER PRIMARY KEY)";
+        String tableUsers = "CREATE TABLE Users(Name TEXT PRIMARY KEY)";
         db.execSQL(tableUsers);
 
-        String tableNotes = "CREATE TABLE Notes(Id INTEGER PRIMARY KEY autoincrement, User INTEGER REFERENCES Users(Id), Note TEXT)";
+        String tableNotes = "CREATE TABLE Notes(Id INTEGER PRIMARY KEY autoincrement, User TEXT REFERENCES Users(Name), Note TEXT, Image BLOB)";
         db.execSQL(tableNotes);
     }
 
@@ -42,52 +57,42 @@ public class DAO extends SQLiteOpenHelper {
         db.close();
     }
 
-    private ArrayList<Integer> getAllUsers() {
-        ArrayList<Integer> allUsers = new ArrayList<Integer>();
+    private void getAllUsers() {
+        UserSelector userSelector = new UserSelector(output -> {
 
-        String selectQuery = "SELECT * FROM Users";
+        }, this);
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                allUsers.add(cursor.getInt(0));
-            } while (cursor.moveToNext());
-        }
-
-        db.close();
-
-        return allUsers;
+        userSelector.execute("User");
     }
 
-    public void addNote(int userId, String note, Object image) {
+    private byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
+    }
+
+    public void addNote(String userName, String note, Bitmap image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("User", userId);
+        values.put("User", userName);
         values.put("Note", note);
+
+        if(image != null) {
+            byte[] data = getBitmapAsByteArray(image);
+
+            values.put("Image", data);
+        }
 
         db.insert("Notes", null, values);
         db.close();
     }
 
-    public ArrayList<String> getAllUserNotes(int userId){
-        ArrayList<String> notes = new ArrayList<>();
+    public void getAllUserNotes(String userName){
+        NoteSelector noteSelector = new NoteSelector(output -> {
 
-        String selectQuery = "SELECT * FROM Notes Where User=" + userId;
+        }, this);
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                notes.add(cursor.getString(2));
-            } while (cursor.moveToNext());
-        }
-
-        db.close();
-
-        return notes;
+        noteSelector.execute(userName);
     }
 
     public void dropNote(int id){

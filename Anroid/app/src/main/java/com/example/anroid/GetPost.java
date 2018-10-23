@@ -31,7 +31,7 @@ public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
         void processFinish(String output) throws ExecutionException, InterruptedException;
     }
 
-    public AsyncResponse delegate = null;
+    private AsyncResponse delegate;
 
     public GetPost(AsyncResponse asyncResponse) {
         this.delegate = asyncResponse;
@@ -41,9 +41,7 @@ public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
     protected void onPostExecute(String result) {
         try {
             delegate.processFinish(result);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -91,18 +89,18 @@ public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
 
                 int responseCode = connection.getResponseCode();
 
-                String response = "";
+                StringBuilder response = new StringBuilder();
 
                 if(responseCode == HttpURLConnection.HTTP_OK){
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     String line;
 
                     while((line = reader.readLine()) != null){
-                        response += line;
+                        response.append(line);
                     }
                 }
 
-                return response;
+                return response.toString();
             } catch (Exception exc) {
                 exc.printStackTrace();
             } finally {
@@ -112,7 +110,8 @@ public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
                     e.printStackTrace();
                 }
             }
-        } catch (Exception gfdgdfg) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 

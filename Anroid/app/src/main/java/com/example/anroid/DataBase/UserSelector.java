@@ -11,18 +11,17 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class UserSelector extends AsyncTask<String, Void, ArrayList<User>> {
-    private interface AsyncResponse {
+    public interface AsyncResponse {
         void processFinish(ArrayList<User> output) throws ExecutionException, InterruptedException;
     }
 
     private DAO dao;
+    private AsyncResponse delegate;
 
     public UserSelector(AsyncResponse asyncResponse, DAO dao) {
         this.delegate = asyncResponse;
         this.dao = dao;
     }
-
-    public AsyncResponse delegate = null;
 
     @Override
     protected void onPostExecute(ArrayList<User> result) {
