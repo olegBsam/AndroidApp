@@ -1,103 +1,64 @@
 package com.example.anroid.DataBase;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.widget.TextView;
+import android.os.AsyncTask;
 
-import com.example.anroid.DataBase.entities.User;
+import com.example.anroid.DataBase.entities.Note;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-public class DAO extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "notesDB";
+public class DAO {
+    public static void getAllUserNotes(Context context, String userName, NoteSelector.AsyncResponse response){
+        NoteSelector selector = new NoteSelector(response, AppDatabase.getAppDatabase(context));
 
-    private static DAO instance = null;
-
-    private DAO(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        selector.execute(userName);
     }
 
-    public static DAO getDAO(Context context){
-        if(instance == null){
-            instance = new DAO(context);
+    public static void insertNotes(ArrayList<Note> list, Context context){
+        class InsertNotes extends AsyncTask<ArrayList<Note>, Void, Void>{
+            @Override
+            protected Void doInBackground(ArrayList<Note>... lists) {
+                AppDatabase.getAppDatabase(context).notesDAO().insertAll(lists[0]);
+                return null;
+            }
         }
 
-        return instance;
+        new InsertNotes().execute(list);
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        String tableUsers = "CREATE TABLE Users(Name TEXT PRIMARY KEY)";
-        db.execSQL(tableUsers);
-
-        String tableNotes = "CREATE TABLE Notes(Id INTEGER PRIMARY KEY autoincrement, User TEXT REFERENCES Users(Name), Note TEXT, Image BLOB)";
-        db.execSQL(tableNotes);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Notes");
-        db.execSQL("DROP TABLE IF EXISTS Users");
-
-        onCreate(db);
-    }
-
-    public void addUser(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("Id", id);
-
-        db.insert("Users", null, values);
-        db.close();
-    }
-
-    private void getAllUsers() {
-        UserSelector userSelector = new UserSelector(output -> {
-
-        }, this);
-
-        userSelector.execute("User");
-    }
-
-    private byte[] getBitmapAsByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
-        return outputStream.toByteArray();
-    }
-
-    public void addNote(String userName, String note, Bitmap image) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("User", userName);
-        values.put("Note", note);
-
-        if(image != null) {
-            byte[] data = getBitmapAsByteArray(image);
-
-            values.put("Image", data);
+    public static void insertNote(Note note, Context context){
+        class InsertNotes extends AsyncTask<Note, Void, Void>{
+            @Override
+            protected Void doInBackground(Note... notes) {
+                AppDatabase.getAppDatabase(context).notesDAO().insert(notes[0]);
+                return null;
+            }
         }
 
-        db.insert("Notes", null, values);
-        db.close();
+        new InsertNotes().execute(note);
     }
 
-    public void getAllUserNotes(String userName){
-        NoteSelector noteSelector = new NoteSelector(output -> {
+    public static void dropAllNotesByUserName(String name, Context context){
+        class DropNotes extends AsyncTask<String, Void, Void>{
+            @Override
+            protected Void doInBackground(String... strings) {
+                AppDatabase.getAppDatabase(context).notesDAO().deleteAllNotesByUserName(strings[0]);
+                return null;
+            }
+        }
 
-        }, this);
-
-        noteSelector.execute(userName);
+        new DropNotes().execute(name);
     }
 
-    public void dropNote(int id){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("Notes", "Id" + " = ?", new String[] { String.valueOf(id) });
-        db.close();
+    public static void dropNoteById(int id, Context context){
+        class DropNote extends AsyncTask<Integer, Void, Void>{
+            @Override
+            protected Void doInBackground(Integer... integers) {
+                AppDatabase.getAppDatabase(context).notesDAO().deleteNoteById(integers[0]);
+                return null;
+            }
+        }
+
+        new DropNote().execute(id);
     }
 }

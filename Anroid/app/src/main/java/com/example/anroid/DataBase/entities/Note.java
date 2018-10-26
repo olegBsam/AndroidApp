@@ -1,19 +1,36 @@
 package com.example.anroid.DataBase.entities;
 
-import android.graphics.Bitmap;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity(tableName="Notes")
 public class Note {
+    @PrimaryKey(autoGenerate = true)
     private int id;
-    private String text;
-    private Bitmap image;
 
-    public Note(int id, String text) {
-        this.id = id;
+    private String userName;
+    private String text;
+    private byte[] image;
+
+    public Note(String text, String userName) {
         this.text = text;
+        this.userName = userName;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getText() {
@@ -24,11 +41,11 @@ public class Note {
         this.text = text;
     }
 
-    public Bitmap getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void addImage(Bitmap image){
+    public void setImage(byte[] image) {
         this.image = image;
     }
 }

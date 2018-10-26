@@ -1,20 +1,28 @@
 package com.example.anroid;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.anroid.DataBase.DAO;
-import com.example.anroid.DataBase.NoteSelector;
 import com.example.anroid.DataBase.entities.Note;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.io.ByteArrayOutputStream;
 
 public class NotesActivity extends AppCompatActivity {
     private String userName;
+
+    private byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +36,33 @@ public class NotesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        findViewById(R.id.buttonAddNote).setOnClickListener((listener)->{
+            Intent intent = new Intent(NotesActivity.this, AddNoteActivity.class);
+            intent.putExtra("Name", userName);
+            startActivity(intent);
+        });
+
         LinearLayout notesLayout = findViewById(R.id.notesList);
         notesLayout.removeAllViews();
 
         Context context = this;
 
-        NoteSelector selector = new NoteSelector(new NoteSelector.AsyncResponse() {
-            @Override
-            public void processFinish(ArrayList<Note> output) throws ExecutionException, InterruptedException {
-                for(Note note : output){
-                    TextView textView = new TextView(context);
-                    textView.setText(note.getText());
+        DAO.getAllUserNotes(this, userName, output -> {
+            for(Note note : output){
+                LinearLayout layout = new LinearLayout(context);
+                TextView textView = new TextView(context);
+                textView.setText(note.getText());
+                layout.addView(textView);
 
-                    notesLayout.addView(textView);
+                GradientDrawable border = new GradientDrawable();
+                border.setColor(0xFFFFFFFF);
+                border.setStroke(1, 0xFF000000);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    layout.setBackground(border);
                 }
-            }
-        }, DAO.getDAO(context));
 
-        selector.execute(userName);
+                notesLayout.addView(layout);
+            }
+        });
     }
 }
