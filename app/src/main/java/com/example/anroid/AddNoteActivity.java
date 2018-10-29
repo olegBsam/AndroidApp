@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.example.anroid.DataBase.DAO;
-import com.example.anroid.DataBase.entities.Note;
+import com.example.anroid.database.DAO;
+import com.example.anroid.database.entities.Note;
 
 public class AddNoteActivity extends AppCompatActivity {
     @Override

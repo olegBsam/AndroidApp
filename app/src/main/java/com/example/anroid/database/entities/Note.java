@@ -1,4 +1,4 @@
-package com.example.anroid.DataBase.entities;
+package com.example.anroid.database.entities;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

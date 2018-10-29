@@ -1,9 +1,9 @@
-package com.example.anroid.DataBase;
+package com.example.anroid.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.anroid.DataBase.entities.Note;
+import com.example.anroid.database.entities.Note;
 
 import java.util.ArrayList;
 
