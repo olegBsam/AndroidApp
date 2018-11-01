@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textViewLogin4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/string_login" />
+
+        <EditText
+            android:id="@+id/editTextLoginRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:width="60dp"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/textViewLogin3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/strings_password" />
+
+        <EditText
+            android:id="@+id/editTextPasswordRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:width="60dp"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/textViewLogin2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/strings_password_repeat" />
+
+        <EditText
+            android:id="@+id/editTextPasswordRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:width="60dp"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <Button
+            android:id="@+id/buttonAcceptRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/strings_accept_button" />
+
+        <Button
+            android:id="@+id/buttonDeclineRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/strings_decline_button" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

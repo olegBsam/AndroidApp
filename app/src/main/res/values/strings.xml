@@ -6,4 +6,11 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="strings_accept_button">Принять</string>
     <string name="strings_decline_button">Отменить</string>
+    <string name="string_login">Логин</string>
+    <string name="strings_password">Пароль</string>
+    <string name="strings_password_repeat">Повторите пароль</string>
+    <string name="strings_enter">Вход</string>
+    <string name="strings_registration">Регистрация</string>
+    <string name="strings_forget_password">Забыли пароль?</string>
+    <string name="strings_name">ReNote</string>
 </resources>
