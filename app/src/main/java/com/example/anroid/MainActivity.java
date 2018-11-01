@@ -2,13 +2,17 @@ package com.example.anroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REGISTRATION_REQUEST = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,12 +45,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             sendAuthenticationData(login, password);
-
         });
 
         findViewById(R.id.buttonRegistration).setOnClickListener((listener) -> {
-            startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+            startActivityForResult(new Intent(MainActivity.this, RegistrationActivity.class), REGISTRATION_REQUEST);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REGISTRATION_REQUEST && resultCode == RESULT_OK && data != null) {
+            sendAuthenticationData(Objects.requireNonNull(Objects.requireNonNull(data.getExtras()).get("login")).toString(), Objects.requireNonNull(data.getExtras().get("password")).toString());
+        }
     }
 
     private void sendAuthenticationData(String login, String password) {

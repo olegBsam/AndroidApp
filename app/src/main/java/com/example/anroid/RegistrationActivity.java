@@ -1,5 +1,6 @@
 package com.example.anroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -17,6 +18,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
             if(login.length() == 0){
                 Toast.makeText(this, "Введите логин", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!MainActivity.validateLogin(login)) {
+                Toast.makeText(this, "Неверный формат логина", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -43,6 +49,9 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.buttonDeclineRegistration).setOnClickListener((listener)->{
+            Intent intent = new Intent();
+            setResult(RESULT_CANCELED, intent);
+
             finish();
         });
     }
@@ -56,7 +65,11 @@ public class RegistrationActivity extends AppCompatActivity {
                         break;
                     }
                     case "4": {
-                        //TODO OK
+                        Intent intent = new Intent();
+                        intent.putExtra("login", login);
+                        intent.putExtra("password", password);
+                        setResult(RESULT_OK, intent);
+
                         break;
                     }
                 }
