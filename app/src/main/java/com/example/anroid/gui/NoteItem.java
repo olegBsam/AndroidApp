@@ -1,6 +1,7 @@
 package com.example.anroid.gui;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ public class NoteItem extends LinearLayout {
         return guid;
     }
 
-    public NoteItem(Context context, String str, int guid) {
+    public NoteItem(Context context, String str, int guid, byte[] image) {
         super(context);
         this.setOrientation(HORIZONTAL);
         this.guid = guid;
@@ -28,6 +29,10 @@ public class NoteItem extends LinearLayout {
         tv.setSingleLine(false);
         ImageView iv = new ImageView(context);
         tv.setText(str);
+
+        if(image != null){
+            iv.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+        }
 
         this.addView(iv);
         this.addView(tv);

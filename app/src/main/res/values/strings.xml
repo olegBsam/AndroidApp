@@ -4,4 +4,6 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="strings_accept_button">Принять</string>
+    <string name="strings_decline_button">Отменить</string>
 </resources>
