@@ -29,7 +29,7 @@ public class AddNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         image = null;
 
-        findViewById(R.id.add_note_text).getBackground().clearColorFilter();
+        //findViewById(R.id.add_note_text).getBackground().clearColorFilter();
 
         setContentView(R.layout.activity_add_note);
 

@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);*/
 
         findViewById(R.id.buttonLogIn).setOnClickListener((listener) -> {
-            /*Intent intent1 = new Intent(MainActivity.this, NotesActivity.class);
+            Intent intent1 = new Intent(MainActivity.this, NotesActivity.class);
             intent1.putExtra("Name", "Oleg");
-            startActivity(intent1);*/
+            startActivity(intent1);
 
             String login = ((TextView) findViewById(R.id.editTextLogin)).getText().toString();
             if (login.length() == 0) {
