@@ -13,15 +13,13 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract NotesDAO notesDAO();
 
+    public static String dataBaseName = "user-database";
+
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE =
-                    Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "user-database").build();
+                    Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, dataBaseName).build();
         }
         return INSTANCE;
-    }
-
-    public static void destroyInstance() {
-        INSTANCE = null;
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.anroid.database.DAO;
@@ -27,24 +28,38 @@ public class AddNoteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        int id = intent.getIntExtra("id", -1);
+        String text = "";
         image = null;
 
-        //findViewById(R.id.add_note_text).getBackground().clearColorFilter();
-
+        if (id != -1){
+            text = intent.getStringExtra("text");
+            image = intent.getByteArrayExtra("image");
+        }
         setContentView(R.layout.activity_add_note);
 
-        String userName = getIntent().getExtras().getString("Name");
+        EditText tv = findViewById(R.id.add_note_text);
+        tv.setText(text);
+
+        String userName = intent.getExtras().getString("Name");
 
         findViewById(R.id.button_decline).setOnClickListener((listener)-> this.finish());
 
         findViewById(R.id.button_accept).setOnClickListener((listener)-> {
-            String text = ((TextView)findViewById(R.id.add_note_text)).getText().toString();
-            Note note = new Note(text, userName);
+            String newText = ((TextView)findViewById(R.id.add_note_text)).getText().toString();
+            Note note = new Note(newText, userName);
+
 
             if(image != null) {
                 note.setImage(image);
             }
 
+            if (id != -1){
+                note.setId(id);
+                DAO.dropNoteById(id, AddNoteActivity.this);
+            }
             DAO.insertNote(note, AddNoteActivity.this);
             this.finish();
         });

@@ -59,17 +59,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strings_password" />
 
-            <TextView
-                android:id="@+id/textViewPassword2"
-                android:layout_width="145dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autoLink="web"
-                android:autoText="false"
-                android:gravity="right"
-                android:text="@string/strings_forget_password"
-                android:textColor="@color/black_overlay"
-                android:textColorLink="@color/black_overlay" />
         </LinearLayout>
 
         <EditText

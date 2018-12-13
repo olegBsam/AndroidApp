@@ -3,6 +3,7 @@ package com.example.anroid.database;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.example.anroid.database.entities.Note;
@@ -17,10 +18,10 @@ public interface NotesDAO {
     String TABLE_NOTES_USER_NAME = "userName";
     String TABLE_NOTES_PK = "Id";
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ArrayList<Note> list);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Note note);
 
     @Delete

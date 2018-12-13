@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
 
-    private static final String myUrl = "http://192.168.43.68:50000/api/Web";//"http://desktop-dtjiv0n:9810/api/Rest";
+    private static final String myUrl = "http://192.168.211.1:60000/api/web/";//"http://192.168.43.68:50000/api/Web";
 
     public interface AsyncResponse {
         void processFinish(String output) throws ExecutionException, InterruptedException;
@@ -76,7 +76,7 @@ public class GetPost extends AsyncTask<HashMap<String, String>, Void, String> {
                 /*JSONObject object = new JSONObject();
                 object.put("value", "25");
                 bufferedWriter.write(URLEncoder.encode(object.toString(), "UTF-8"));*/
-                bufferedWriter.write(getQuery(maps[0]));
+                bufferedWriter.write(getQuery(maps[0]) + getQuery(maps[1]) + getQuery(maps[2]));
                 bufferedWriter.flush();
 
                 int responseCode = connection.getResponseCode();

@@ -18,14 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*Intent intent = new Intent(MainActivity.this, NotesActivity.class);
-        intent.putExtra("Name", "Oleg");
-        startActivity(intent);*/
-
         findViewById(R.id.buttonLogIn).setOnClickListener((listener) -> {
-            Intent intent1 = new Intent(MainActivity.this, NotesActivity.class);
-            intent1.putExtra("Name", "Oleg");
-            startActivity(intent1);
 
             String login = ((TextView) findViewById(R.id.editTextLogin)).getText().toString();
             if (login.length() == 0) {
@@ -44,13 +37,18 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+
             sendAuthenticationData(login, password);
+
+
         });
 
         findViewById(R.id.buttonRegistration).setOnClickListener((listener) -> {
             startActivityForResult(new Intent(MainActivity.this, RegistrationActivity.class), REGISTRATION_REQUEST);
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendAuthenticationData(String login, String password) {
         try {
             GetPost g = new GetPost(output -> {
-                switch (output) {
+                switch (output.replaceAll("\"", "")) {
                     case "1": {
                         Intent intent = new Intent(MainActivity.this, NotesActivity.class);
                         intent.putExtra("Name", login);
@@ -76,12 +74,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            HashMap<String, String> map = new HashMap<>();
-            map.put("login", login);
-            map.put("password", password);
-            map.put("isNew", "0");
+            HashMap<String, String> map1 = new HashMap<>();
+            map1.put("IsNew", "0");
+            HashMap<String, String> map2 = new HashMap<>();
+            map2.put("Login", login);
+            HashMap<String, String> map3 = new HashMap<>();
+            map3.put("Password", password);
 
-            g.execute(map);
+
+            g.execute(map1, map2, map3);
 
         } catch (Exception e) {
             e.printStackTrace();
