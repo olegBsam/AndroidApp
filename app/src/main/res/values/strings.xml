@@ -15,8 +15,4 @@
     <string name="strings_name">ReNote</string>
     <string name="delete_button_text">Удалить выбранное</string>
     <string name="add_button_text">Добавить запись</string>
-    <string name="model_user_name">Name</string>
-    <string name="model_note_text">text</string>
-    <string name="model_note_id">id</string>
-    <string name="model_note_image">image</string>
 </resources>

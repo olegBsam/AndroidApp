@@ -1,5 +1,6 @@
 package com.example.anroid;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,15 +19,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NotesActivity extends AppCompatActivity {
-    private String userName;
     private boolean isDeleteModeOn = false;
+    private static NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
 
-        userName = getIntent().getExtras().getString(getString(R.string.model_user_name));
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
     }
 
     @Override
@@ -49,8 +50,10 @@ public class NotesActivity extends AppCompatActivity {
                 onStart();
             }
             else {
+                viewModel.image = null;
+                viewModel.text = null;
+                viewModel.id = -1;
                 Intent intent = new Intent(NotesActivity.this, AddNoteActivity.class);
-                intent.putExtra(getString(R.string.model_user_name), userName);
                 startActivity(intent);
             }
         });
@@ -70,7 +73,7 @@ public class NotesActivity extends AppCompatActivity {
         });
 
 
-        DAO.getAllUserNotes(this, userName, output -> {
+        DAO.getAllUserNotes(this, viewModel.name, output -> {
             ArrayList<NoteItem> noteItems = NoteItem.getSelectedItems();
             NoteItem.reloadSelectedItems();
 
@@ -85,10 +88,7 @@ public class NotesActivity extends AppCompatActivity {
                 View.OnClickListener ocl = (listener)->{
                     if (!NoteItem.isMultiSelected()) {
                         Intent intent = new Intent(NotesActivity.this, AddNoteActivity.class);
-                        intent.putExtra(getString(R.string.model_user_name), userName);
-                        intent.putExtra(getString(R.string.model_note_text), note.getText());
-                        intent.putExtra(getString(R.string.model_note_id), note.getId());
-                        intent.putExtra(getString(R.string.model_note_image), note.getImage());
+                        viewModel.id = note.getId();;
                         startActivity(intent);
                     }
                     return;

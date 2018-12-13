@@ -1,5 +1,6 @@
 package com.example.anroid;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -18,32 +19,22 @@ import java.util.Objects;
 public class AddNoteActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 0;
 
-    private byte[] image;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    private static NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        int id = intent.getIntExtra("id", -1);
-        String text = "";
-        image = null;
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
 
-        if (id != -1){
-            text = intent.getStringExtra("text");
-            image = intent.getByteArrayExtra("image");
-        }
+        int id = viewModel.id;
+
         setContentView(R.layout.activity_add_note);
 
         EditText tv = findViewById(R.id.add_note_text);
-        tv.setText(text);
+        tv.setText(viewModel.text);
 
-        String userName = intent.getExtras().getString("Name");
+        String userName = viewModel.name;
 
         findViewById(R.id.button_decline).setOnClickListener((listener)-> this.finish());
 
@@ -51,9 +42,8 @@ public class AddNoteActivity extends AppCompatActivity {
             String newText = ((TextView)findViewById(R.id.add_note_text)).getText().toString();
             Note note = new Note(newText, userName);
 
-
-            if(image != null) {
-                note.setImage(image);
+            if(viewModel.image != null) {
+                note.setImage(viewModel.image);
             }
 
             if (id != -1){
@@ -82,7 +72,7 @@ public class AddNoteActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && data != null) {
             Bitmap thumbnailBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             if (thumbnailBitmap != null) {
-                image = getBitmapAsByteArray(thumbnailBitmap);
+                viewModel.image = getBitmapAsByteArray(thumbnailBitmap);
             }
         }
     }
